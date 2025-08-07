@@ -1,4 +1,5 @@
 export const AvailableTools = {
+    AI: 'ai',
     Hand: 'hand',
     Selection: 'selection',
     Rectangle: 'rectangle',
