@@ -31,12 +31,12 @@ const Toolbar: React.FC<Toolbar> = ({ selectedTool, handleSelectTool }) => {
                                 key={item.name}
                                 onClick={() => handleSelectTool(item.name as AvailableTools)}
                                 className={`
-                                relative flex items-center justify-center w-10 h-10 rounded-lg
+                                relative flex items-center justify-center w-10 h-10 rounded-xl
                                 text-sm font-medium transition-all duration-200
                                     ${
                                         selectedTool === item.name
-                                            ? 'bg-[#004030] text-white shadow-md'
-                                            : 'text-gray-800 hover:bg-gray-700 hover:text-white'
+                                            ? 'bg-[#465C88] text-white shadow-md'
+                                            : 'text-black hover:bg-[#465C88] hover:text-white'
                                     }
                                 `}
                                 title={item.title}
