@@ -85,6 +85,21 @@ export function handleSocketMessage(message: ServerSocketEvent | null, ctxObj: S
             break;
         }
 
+        case 'shape-removed': {
+            const { shapeId } = message.data;
+            const updatedShapes = shapes.filter((shape) => shape.id !== shapeId);
+
+            updatedShapes.forEach((shape) => {
+                ctx.save();
+                ctx.translate(panOffset.x, panOffset.y);
+                drawShape(ctx, shape);
+                ctx.restore();
+            });
+
+            setShapes(updatedShapes);
+            break;
+        }
+
         case 'cursor-position': {
             const { roomId, id, name, x, y } = message.data;
             const position = {
