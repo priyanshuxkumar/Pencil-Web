@@ -1,11 +1,15 @@
-import { createContext, useContext, useRef, useState } from 'react';
-import { AvailableTools, type Points } from '../types';
+import { useRef, useState } from 'react';
+import { AvailableTools } from '../types/tools.types';
+import type { Points } from '../types/shapes.types';
+import { ToolsContext } from '../hook/useTools';
 
 interface ToolsProviderProp {
     children: React.ReactNode;
 }
 
-interface ToolsContextType {
+export interface ToolsContextType {
+    currentPoints: React.RefObject<Points[]>;
+
     selectedStrokeColor: number;
     setSelectedStrokeColor: React.Dispatch<React.SetStateAction<number>>;
 
@@ -24,19 +28,9 @@ interface ToolsContextType {
     selectedTool: AvailableTools;
     setSelectedTool: React.Dispatch<React.SetStateAction<AvailableTools>>;
 
-    currentPoints: React.RefObject<Points[]>;
+    selectionRect: { x: number; y: number; width: number; height: number } | null;
+    setSelectionRect: React.Dispatch<{ x: number; y: number; width: number; height: number } | null>;
 }
-
-const ToolsContext = createContext<ToolsContextType | null>(null);
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useTools = () => {
-    const context = useContext(ToolsContext);
-    if (!context) {
-        throw new Error('Tools must be use in Tools provider');
-    }
-    return context;
-};
 
 export const ToolsProvider: React.FC<ToolsProviderProp> = ({ children }) => {
     const currentPoints = useRef<Points[]>([]);
@@ -46,6 +40,12 @@ export const ToolsProvider: React.FC<ToolsProviderProp> = ({ children }) => {
     const [selectedStrokeStyle, setSelectedStrokeStyle] = useState(0);
     const [selectedEdges, setSelectedEdges] = useState(1);
     const [selectedTool, setSelectedTool] = useState<AvailableTools>(AvailableTools.Selection);
+    const [selectionRect, setSelectionRect] = useState<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    } | null>(null);
 
     const value: ToolsContextType = {
         selectedStrokeColor,
@@ -61,6 +61,8 @@ export const ToolsProvider: React.FC<ToolsProviderProp> = ({ children }) => {
         selectedTool,
         setSelectedTool,
         currentPoints,
+        selectionRect,
+        setSelectionRect,
     };
 
     return <ToolsContext.Provider value={value}>{children}</ToolsContext.Provider>;
