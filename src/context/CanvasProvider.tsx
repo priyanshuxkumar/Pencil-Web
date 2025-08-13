@@ -1,12 +1,16 @@
-import React, { createContext, useContext, useRef, useState } from 'react';
-import type { Shape } from '../types';
+import React, { useRef, useState } from 'react';
 import type { CursorType } from '../components/Canvas';
+import type { Shape } from '../types/shapes.types';
+import { CanvasContext } from '../hook/useCanvas';
 
 interface CanvasProviderProp {
     children: React.ReactNode;
 }
 
-interface CanvasContextType {
+export interface CanvasContextType {
+    start: React.RefObject<{ x: number; y: number }>;
+    isDrawing: React.RefObject<boolean>;
+
     scale: number;
     setScale: React.Dispatch<React.SetStateAction<number>>;
 
@@ -15,8 +19,6 @@ interface CanvasContextType {
 
     selectedShape: Shape | null;
     setSelectedShape: React.Dispatch<React.SetStateAction<Shape | null>>;
-
-    start: React.RefObject<{ x: number; y: number }>;
 
     selectedBorderBounds: {
         x: number;
@@ -47,22 +49,13 @@ interface CanvasContextType {
     startPan: { x: number; y: number };
     setStartPan: React.Dispatch<{ x: number; y: number }>;
 
-    isDrawing: React.RefObject<boolean>;
+    isResizing: boolean;
+    setIsResizing: React.Dispatch<boolean>;
 }
-
-const CanvasContext = createContext<CanvasContextType | null>(null);
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useCanvas = () => {
-    const context = useContext(CanvasContext);
-    if (!context) {
-        throw new Error('Canvas must be use in Canvas provider');
-    }
-    return context;
-};
 
 export const CanvasProvider: React.FC<CanvasProviderProp> = ({ children }) => {
     const start = useRef({ x: 0, y: 0 });
+    const isDrawing = useRef(false);
     const [shapes, setShapes] = useState<Shape[]>([]);
     const [selectedBorderBounds, setSelectedBorderBounds] = useState<{
         x: number;
@@ -81,7 +74,7 @@ export const CanvasProvider: React.FC<CanvasProviderProp> = ({ children }) => {
     const [isPanning, setIsPanning] = useState<boolean>(false);
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
     const [startPan, setStartPan] = useState({ x: 0, y: 0 });
-    const isDrawing = useRef(false);
+    const [isResizing, setIsResizing] = useState(false);
 
     const value: CanvasContextType = {
         isDrawing,
@@ -104,6 +97,8 @@ export const CanvasProvider: React.FC<CanvasProviderProp> = ({ children }) => {
         setPanOffset,
         startPan,
         setStartPan,
+        isResizing,
+        setIsResizing,
     };
 
     return <CanvasContext.Provider value={value}>{children}</CanvasContext.Provider>;
