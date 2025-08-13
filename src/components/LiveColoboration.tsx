@@ -1,7 +1,7 @@
 import { Play } from 'lucide-react';
-import { useSocket } from '../hook/socket';
 import { useNavigate } from 'react-router-dom';
-import type { Shape } from '../types';
+import { useSocket } from '../hook/useSocket';
+import type { Shape } from '../types/shapes.types';
 
 export default function LiveCollaboration({
     onStartSession,
@@ -10,7 +10,7 @@ export default function LiveCollaboration({
     onStartSession: (link: string, roomId: string) => void;
     shapes: Shape[];
 }) {
-    const { connect, socketRef } = useSocket();
+    const { connect, socketRef, sendMessage } = useSocket();
     const navigate = useNavigate();
     const createLink = async () => {
         try {
@@ -39,15 +39,13 @@ export default function LiveCollaboration({
 
             onStartSession(data.inviteUrl, data.roomId);
 
-            socketRef.current?.send(
-                JSON.stringify({
-                    type: 'join',
-                    payload: {
-                        roomId: data.roomId,
-                        shapes, // existing shapes
-                    },
-                }),
-            );
+            sendMessage({
+                type: 'join',
+                payload: {
+                    roomId: data.roomId,
+                    shapes, // existing shapes
+                },
+            });
 
             navigate(`#room=${data.roomId},${data.roomKey}`);
         } catch (err: unknown) {
