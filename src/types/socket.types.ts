@@ -6,7 +6,7 @@ export type SocketMessage =
     | { type: 'join-room'; payload: { roomId: string; userId: string } }
     | { type: 'join'; payload: { roomId: string; shapes?: Shape[] } }
     | { type: 'create-shape'; payload: { shape: Shape; roomId: string } }
-    | { type: 'remove-shape'; payload: { shapeId: string; roomId: string } }
+    | { type: 'remove-shape'; payload: { shapeId: string } }
     | { type: 'cursor-position'; payload: { roomId: string; x: number; y: number } }
     | { type: 'select-shape'; payload: { roomId: string; shapeId?: string } }
     | { type: 'resize-shape'; payload: { roomId: string; shape: Shape } };
