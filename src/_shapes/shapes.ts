@@ -53,3 +53,42 @@ export function roundedRect(
     ctx.closePath();
     ctx.stroke();
 }
+
+export function ellipse(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    radiusX: number,
+    radiusY: number,
+    strokeColor: string,
+    bgColor: string,
+    strokeWidth: number,
+    strokeStyle: number,
+    rotation: number = 0,
+    startAngle: number = 0,
+    endAngle: number = 2 * Math.PI,
+) {
+    ctx.beginPath();
+    ctx.ellipse(x + radiusX, y + radiusY, radiusX, radiusY, rotation, startAngle, endAngle);
+    ctx.lineWidth = strokeWidth;
+    ctx.fillStyle = bgColor;
+    ctx.fill();
+    ctx.setLineDash([strokeStyle, strokeStyle]);
+    ctx.strokeStyle = strokeColor;
+    ctx.stroke();
+}
+
+export function drawText(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    text: string,
+    fontSize: string,
+    color: string,
+) {
+    ctx.font = `${fontSize} Playpen Sans, Arial`;
+    ctx.fillStyle = color;
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'center';
+    ctx.fillText(text, x, y);
+}
