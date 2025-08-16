@@ -58,16 +58,57 @@ export function drawSelectionBorder(
     setSelectedBorderBounds: (bounds: { x: number; y: number; width: number; height: number }) => void,
 ) {
     const padding = 4;
-    const _x = shape.x - padding;
-    const _y = shape.y - padding;
-    const _width = shape.width + padding * 2;
-    const _height = shape.height + padding * 2;
+
+    const shapeLeft = shape.width >= 0 ? shape.x : shape.x + shape.width;
+    const shapeTop = shape.height >= 0 ? shape.y : shape.y + shape.height;
+    const shapeRight = shape.width >= 0 ? shape.x + shape.width : shape.x;
+    const shapeBottom = shape.height >= 0 ? shape.y + shape.height : shape.y;
+
+    const x1 = shapeLeft - padding;
+    const y1 = shapeTop - padding;
+    const x2 = shapeRight + padding;
+    const y2 = shapeBottom + padding;
+
+    const normX = Math.min(x1, x2);
+    const normY = Math.min(y1, y2);
+    const normW = Math.abs(x2 - x1);
+    const normH = Math.abs(y2 - y1);
+
+    console.log('norm', normX, normY, normW, normH);
 
     ctx.save();
-    ctx.strokeStyle = '#004030';
-    ctx.lineWidth = 0.5;
-    ctx.rect(shape.x + 2, shape.y + 2, 2, 2);
-    ctx.strokeRect(_x, _y, _width, _height);
-    setSelectedBorderBounds({ x: _x, y: _y, width: Math.abs(_width), height: Math.abs(_height) });
+    ctx.strokeStyle = '#465C88';
+    ctx.lineWidth = 1.2;
+
+    ctx.strokeRect(normX, normY, normW, normH);
+
+    const handleSize = 8;
+    const half = handleSize / 2;
+
+    const points = [
+        { x: normX, y: normY },
+        { x: normX + normW, y: normY },
+        { x: normX, y: normY + normH },
+        { x: normX + normW, y: normY + normH },
+    ];
+
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = '#465C88';
+    ctx.lineWidth = 1.5;
+
+    for (const p of points) {
+        ctx.beginPath();
+        ctx.rect(p.x - half, p.y - half, handleSize, handleSize);
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    setSelectedBorderBounds({
+        x: Math.abs(normX),
+        y: Math.abs(normY),
+        width: normW,
+        height: normH,
+    });
+
     ctx.restore();
 }
