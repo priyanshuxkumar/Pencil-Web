@@ -164,7 +164,7 @@ export const CanvasProvider: React.FC<CanvasProviderProp> = ({ children }) => {
                     drawSelection(ctx, shape.x, shape.y, shape.width, shape.height);
                     break;
                 case AvailableTools.Text:
-                    drawText(ctx, shape.x, shape.y, shape.text);
+                    drawText(ctx, shape.x, shape.y, shape.text, shape.fontSize, shape.color);
                     break;
                 default:
                     break;

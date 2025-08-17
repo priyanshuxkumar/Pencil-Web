@@ -78,6 +78,98 @@ export function ellipse(
     ctx.stroke();
 }
 
+export function drawDiamond(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    strokeColor: string,
+    bgColor: string,
+    strokeWidth: number,
+    strokeStyle: number,
+) {
+    const centerX = x + width / 2;
+    const centerY = y + height / 2;
+
+    const top = { x: centerX, y: y };
+    const right = { x: x + width, y: centerY };
+    const bottom = { x: centerX, y: y + height };
+    const left = { x: x, y: centerY };
+
+    ctx.beginPath();
+    ctx.moveTo(top.x, top.y);
+    ctx.lineTo(right.x, right.y);
+    ctx.lineTo(bottom.x, bottom.y);
+    ctx.lineTo(left.x, left.y);
+
+    ctx.lineWidth = strokeWidth;
+    ctx.fillStyle = bgColor;
+    ctx.fill();
+    ctx.setLineDash([strokeStyle, strokeStyle]);
+    ctx.strokeStyle = strokeColor;
+    ctx.closePath();
+    ctx.stroke();
+}
+
+export function drawLine(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    dx: number,
+    dy: number,
+    strokeColor: string,
+    strokeWidth: number,
+    strokeStyle: number,
+) {
+    ctx.beginPath();
+    // start
+    ctx.moveTo(x, y);
+    //end
+    ctx.lineTo(x + dx, y + dy);
+    ctx.lineWidth = strokeWidth;
+    ctx.setLineDash([strokeStyle, strokeStyle]);
+    ctx.strokeStyle = strokeColor;
+    ctx.stroke();
+}
+
+export function drawArrow(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    dx: number,
+    dy: number,
+    strokeColor: string,
+    strokeWidth: number,
+    strokeStyle: number,
+) {
+    const headLength = Math.max(12, strokeWidth * 1.5);
+    const headAngle = Math.PI / 6;
+
+    const endX = x + dx;
+    const endY = y + dy;
+    const angle = Math.atan2(dy, dx);
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(endX, endY);
+    ctx.lineWidth = strokeWidth;
+    ctx.setLineDash([strokeStyle, strokeStyle]);
+    ctx.strokeStyle = strokeColor;
+    ctx.stroke();
+
+    // head
+    ctx.beginPath();
+    ctx.moveTo(endX, endY);
+    ctx.lineTo(endX - headLength * Math.cos(angle - headAngle), endY - headLength * Math.sin(angle - headAngle));
+    ctx.moveTo(endX, endY);
+    ctx.lineTo(endX - headLength * Math.cos(angle + headAngle), endY - headLength * Math.sin(angle + headAngle));
+    ctx.lineWidth = strokeWidth;
+    ctx.setLineDash([strokeStyle, strokeStyle]);
+    ctx.strokeStyle = strokeColor;
+    ctx.stroke();
+}
+
 export function drawText(
     ctx: CanvasRenderingContext2D,
     x: number,
