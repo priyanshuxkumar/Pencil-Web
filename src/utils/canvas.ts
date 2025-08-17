@@ -74,8 +74,6 @@ export function drawSelectionBorder(
     const normW = Math.abs(x2 - x1);
     const normH = Math.abs(y2 - y1);
 
-    console.log('norm', normX, normY, normW, normH);
-
     ctx.save();
     ctx.strokeStyle = '#465C88';
     ctx.lineWidth = 1.2;
@@ -112,3 +110,82 @@ export function drawSelectionBorder(
 
     ctx.restore();
 }
+
+export const handleShapeResize = (
+    originalBounds: { x: number; y: number; width: number; height: number },
+    selectedShape: Shape,
+    currX: number,
+    currY: number,
+    resizeDirection: string,
+) => {
+    const newBound = { ...originalBounds };
+    const newShape = { ...selectedShape } as Shape;
+
+    switch (resizeDirection) {
+        case 'top-left':
+            newBound.width += newBound.x - currX;
+            newBound.height += newBound.y - currY;
+            newBound.x = currX;
+            newBound.y = currY;
+            break;
+        case 'bottom-left':
+            newBound.width += newBound.x - currX;
+            newBound.height = currY - newBound.y;
+            newBound.x = currX;
+            break;
+        case 'bottom-right':
+            newBound.width = currX - newBound.x;
+            newBound.height = currY - newBound.y;
+            break;
+        case 'top-right':
+            newBound.width = currX - newBound.x;
+            newBound.height += newBound.y - currY;
+            newBound.y = currY;
+            break;
+    }
+
+    if (newShape.type === AvailableTools.Rectangle || newShape.type === AvailableTools.Diamond) {
+        newShape.x = newBound.x;
+        newShape.y = newBound.y;
+        newShape.width = newBound.width;
+        newShape.height = newBound.height;
+    } else if (newShape.type === AvailableTools.Ellipse) {
+        const x = Math.min(newBound.x, newBound.x + newBound.width);
+        const y = Math.min(newBound.y, newBound.y + newBound.height);
+        const w = Math.abs(newBound.width);
+        const h = Math.abs(newBound.height);
+
+        newShape.x = x;
+        newShape.y = y;
+        newShape.radiusX = w / 2;
+        newShape.radiusY = h / 2;
+    } else if (newShape.type === AvailableTools.Line || newShape.type === AvailableTools.Arrow) {
+        const x1 = newBound.x;
+        const y1 = newBound.y;
+        const x2 = newBound.x + newBound.width;
+        const y2 = newBound.y + newBound.height;
+
+        if (resizeDirection === 'top-left') {
+            newShape.x = currX;
+            newShape.y = currY;
+            newShape.dx = x2 - currX;
+            newShape.dy = y2 - currY;
+        } else if (resizeDirection === 'bottom-right') {
+            newShape.x = x1;
+            newShape.y = y1;
+            newShape.dx = currX - x1;
+            newShape.dy = currY - y1;
+        } else if (resizeDirection === 'top-right') {
+            newShape.x = x1;
+            newShape.y = currY;
+            newShape.dx = currX - x1;
+            newShape.dy = y2 - currY;
+        } else if (resizeDirection === 'bottom-left') {
+            newShape.x = currX;
+            newShape.y = y1;
+            newShape.dx = x2 - currX;
+            newShape.dy = currY - y1;
+        }
+    }
+    return newShape;
+};
