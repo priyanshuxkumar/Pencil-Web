@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Chat from './Chat';
 import { useTools } from '../hook/useTools';
 import { useCanvas } from '../hook/useCanvas';
-import { EDGES, STROKE_COLORS, STROKE_STYLES, STROKE_WIDTHS, BACKGROUND_COLORS } from '../constant/canvas';
+import { EDGES, STROKE_COLORS, STROKE_STYLES, STROKE_WIDTHS, BACKGROUND_COLORS, TEXT_SIZE } from '../constant/canvas';
 import { AvailableTools } from '../types/tools.types';
 import type { Shape } from '../types/shapes.types';
 
@@ -24,6 +24,7 @@ export default function ToolActions({ handleDrawAi }: { handleDrawAi: (shapes: S
         setSelectedStrokeStyle,
         selectedEdges,
         setSelectedEdges,
+        setSelectedTextSize,
     } = useTools();
 
     const handleSubmit = async () => {
@@ -48,8 +49,8 @@ export default function ToolActions({ handleDrawAi }: { handleDrawAi: (shapes: S
                 }
             }
         } catch (err: unknown) {
-            console.error(err);
-            alert('Failed to generate diagram')
+            console.log(err);
+            alert('Failed to generate diagram');
         } finally {
             setIsGenerating(false);
         }
@@ -63,10 +64,7 @@ export default function ToolActions({ handleDrawAi }: { handleDrawAi: (shapes: S
 
     if (!selectedShape && selectedTool === AvailableTools.Selection) return null;
 
-    if (selectedTool === AvailableTools.Pen ||
-        selectedTool === AvailableTools.Hand ||
-        selectedTool === AvailableTools.Text
-    ) {
+    if (selectedTool === AvailableTools.Pen || selectedTool === AvailableTools.Hand) {
         return null;
     }
 
@@ -164,35 +162,36 @@ export default function ToolActions({ handleDrawAi }: { handleDrawAi: (shapes: S
             )}
 
             {/* Stroke Style */}
-
-            <div className="mb-6">
-                <h3 className="text-sm mb-2 text-black">Stroke Style</h3>
-                <div className="flex gap-2">
-                    {STROKE_STYLES.map((style, idx) => (
-                        <button
-                            key={style}
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150
+            {selectedTool !== AvailableTools.Text && (
+                <div className="mb-6">
+                    <h3 className="text-sm mb-2 text-black">Stroke Style</h3>
+                    <div className="flex gap-2">
+                        {STROKE_STYLES.map((style, idx) => (
+                            <button
+                                key={style}
+                                className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150
                             ${selectedStrokeStyle === style ? 'ring-2 ring-indigo-500 bg-gray-800' : 'bg-gray-700'}
                             hover:scale-105 hover:shadow-sm`}
-                            onClick={() => setSelectedStrokeStyle(idx)}
-                            aria-label={`Stroke style ${style}`}
-                        >
-                            <div
-                                className="w-6 h-0.5 bg-white"
-                                style={{
-                                    backgroundColor: 'white',
-                                    backgroundImage:
-                                        style === 1
-                                            ? 'repeating-linear-gradient(to right, white 0, white 3px, transparent 3px, transparent 6px)'
-                                            : style === 3
-                                            ? 'repeating-linear-gradient(to right, white 0, white 1px, transparent 1px, transparent 3px)'
-                                            : 'none',
-                                }}
-                            />
-                        </button>
-                    ))}
+                                onClick={() => setSelectedStrokeStyle(idx)}
+                                aria-label={`Stroke style ${style}`}
+                            >
+                                <div
+                                    className="w-6 h-0.5 bg-white"
+                                    style={{
+                                        backgroundColor: 'white',
+                                        backgroundImage:
+                                            style === 1
+                                                ? 'repeating-linear-gradient(to right, white 0, white 3px, transparent 3px, transparent 6px)'
+                                                : style === 3
+                                                ? 'repeating-linear-gradient(to right, white 0, white 1px, transparent 1px, transparent 3px)'
+                                                : 'none',
+                                    }}
+                                />
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Edges */}
             {(selectedTool === AvailableTools.Rectangle || selectedShape?.type === 'rectangle') && (
@@ -209,6 +208,26 @@ export default function ToolActions({ handleDrawAi }: { handleDrawAi: (shapes: S
                                 aria-label={`Edge ${edge === 10 ? 'rounded' : 'sharp'}`}
                             >
                                 <div className={`w-6 h-6 border border-white ${edge === 10 ? 'rounded' : ''}`} />
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Text Size  */}
+            {selectedTool === AvailableTools.Text && (
+                <div className="mb-6">
+                    <h3 className="text-sm mb-2 text-black">Text Size</h3>
+                    <div className="flex gap-2">
+                        {TEXT_SIZE.map((size, idx) => (
+                            <button
+                                key={size}
+                                className={`text-white w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150
+                            ${TEXT_SIZE[idx] === size ? 'ring-2 ring-indigo-500 bg-gray-800' : 'bg-gray-700'}
+                            hover:scale-105 hover:shadow-sm`}
+                                onClick={() => setSelectedTextSize(TEXT_SIZE[idx])}
+                            >
+                                {size}
                             </button>
                         ))}
                     </div>
