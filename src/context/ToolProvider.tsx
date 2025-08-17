@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { AvailableTools } from '../types/tools.types';
 import type { Points } from '../types/shapes.types';
 import { ToolsContext } from '../hook/useTools';
+import { useCanvas } from '../hook/useCanvas';
 
 interface ToolsProviderProp {
     children: React.ReactNode;
@@ -30,6 +31,11 @@ export interface ToolsContextType {
 
     selectionRect: { x: number; y: number; width: number; height: number } | null;
     setSelectionRect: React.Dispatch<{ x: number; y: number; width: number; height: number } | null>;
+
+    handleSelectTool: (toolName: AvailableTools) => void;
+
+    selectedTextSize: string;
+    setSelectedTextSize: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const ToolsProvider: React.FC<ToolsProviderProp> = ({ children }) => {
@@ -46,6 +52,21 @@ export const ToolsProvider: React.FC<ToolsProviderProp> = ({ children }) => {
         width: number;
         height: number;
     } | null>(null);
+    const [selectedTextSize, setSelectedTextSize] = useState<string>('M');
+    
+    const { setCursor } = useCanvas();
+
+    const handleSelectTool = (toolName: AvailableTools) => {
+        setSelectedTool(toolName);
+
+        if (toolName === 'selection') {
+            setCursor('default');
+        } else if (toolName === 'text') {
+            setCursor('text');
+        } else {
+            setCursor('crosshair');
+        }
+    };
 
     const value: ToolsContextType = {
         selectedStrokeColor,
@@ -63,6 +84,9 @@ export const ToolsProvider: React.FC<ToolsProviderProp> = ({ children }) => {
         currentPoints,
         selectionRect,
         setSelectionRect,
+        handleSelectTool,
+        selectedTextSize,
+        setSelectedTextSize,
     };
 
     return <ToolsContext.Provider value={value}>{children}</ToolsContext.Provider>;

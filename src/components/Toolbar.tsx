@@ -1,6 +1,6 @@
 import { Hand, MousePointer, Square, Diamond, Circle, ArrowRight, Minus, Edit2, Type, Bot } from 'lucide-react';
-import type React from 'react';
-import { AvailableTools } from '../types';
+import type { AvailableTools } from '../types/tools.types';
+import { useTools } from '../hook/useTools';
 
 const toolbarItems = [
     { name: 'ai', icon: Bot, title: 'AI' },
@@ -15,12 +15,8 @@ const toolbarItems = [
     { name: 'text', icon: Type, title: 'Text' },
 ];
 
-interface Toolbar {
-    selectedTool: string;
-    handleSelectTool: (toolName: AvailableTools) => void;
-}
-
-const Toolbar: React.FC<Toolbar> = ({ selectedTool, handleSelectTool }) => {
+const Toolbar = () => {
+    const { selectedTool, handleSelectTool } = useTools();
     return (
         <div className="flex justify-center w-full items-center bg-transparent">
             <div className="space-y-2">
