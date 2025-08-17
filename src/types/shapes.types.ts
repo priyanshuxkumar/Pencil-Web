@@ -91,7 +91,6 @@ export type Shape =
           y: number;
           width: number;
           height: number;
-
           strokeColor: string;
           bgColor: string;
           strokeWidth: number;
@@ -104,8 +103,8 @@ export type Shape =
           id: string;
           type: 'text';
           text: string;
-          fontSize?: string;
-          color?: string;
+          fontSize: string;
+          color: string;
           x: number;
           y: number;
           userId?: string;
