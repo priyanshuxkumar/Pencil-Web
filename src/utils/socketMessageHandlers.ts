@@ -144,6 +144,15 @@ export function handleSocketMessage(message: ServerSocketEvent | null, ctxObj: S
             break;
         }
 
+        case 'canvas-cleared': {
+            const dpr = window.devicePixelRatio || 1;
+            ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    
+            setShapes([]);
+            setSelectedShape(null);
+            break;
+        }
+
         case 'user-exit': {
             const leavedUserId = message.data.userId;
 
