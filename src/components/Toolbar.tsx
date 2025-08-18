@@ -20,7 +20,7 @@ const Toolbar = () => {
     return (
         <div className="flex justify-center w-full items-center bg-transparent">
             <div className="space-y-2">
-                <div className="flex items-center gap-1 p-1 relative bg-neutral-100 border border-gray-200 rounded-2xl transition-all duration-200 max-w-fit mx-auto shadow-lg">
+                <div className="flex items-center gap-1 p-1 relative border border-gray-200 rounded-2xl transition-all duration-200 max-w-fit mx-auto shadow-lg">
                     <div className="flex flex-col items-center gap-1">
                         {toolbarItems.map((item) => (
                             <button
