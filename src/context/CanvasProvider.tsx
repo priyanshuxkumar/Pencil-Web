@@ -178,7 +178,7 @@ export const CanvasProvider: React.FC<CanvasProviderProp> = ({ children }) => {
         [selectedShape?.id, setSelectedBorderBounds],
     );
 
-    const { sendMessage } = useSocket();
+    const { sendMessage, socketRef } = useSocket();
 
     const deleteShape = (shapeId: string) => {
         const canvas = canvasRef.current;
@@ -196,12 +196,14 @@ export const CanvasProvider: React.FC<CanvasProviderProp> = ({ children }) => {
         setShapes(updatedShapes);
 
         // send to ws
-        sendMessage({
-            type: 'remove-shape',
-            payload: {
-                shapeId,
-            },
-        });
+        if (socketRef.current) {
+            sendMessage({
+                type: 'remove-shape',
+                payload: {
+                    shapeId,
+                },
+            });
+        }
     };
 
     const value: CanvasContextType = {
