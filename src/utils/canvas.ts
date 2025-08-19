@@ -195,3 +195,13 @@ export function resetCanvas(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasEle
     ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
     ctx.clearRect(0, 0, canvas.width / (dpr * scale), canvas.height / (dpr * scale));
 }
+
+export const applyTransform = (ctx: CanvasRenderingContext2D, scale: number) => {
+    const dpr = window.devicePixelRatio || 1;
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+};
+
+export const clearCanvas = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+};
