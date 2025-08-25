@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../hook/useSocket';
 import type { Shape } from '../types/shapes.types';
 
+const HTTP_URL = import.meta.env.VITE_APP_HTTP_URL!;
+
 export default function LiveCollaboration({
     onStartSession,
     shapes,
@@ -14,7 +16,7 @@ export default function LiveCollaboration({
     const navigate = useNavigate();
     const createLink = async () => {
         try {
-            const res = await fetch('http://localhost:8787/gen-room-url', {
+            const res = await fetch(`${HTTP_URL}/gen-room-url`, {
                 method: 'GET',
             });
 
